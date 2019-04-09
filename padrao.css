@@ -1,0 +1,26 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.1em;
+}
+
+.nav{
+    background-color: #282828;
+    color: antiquewhite;
+}
+
+.menu-fixo{
+    position: fixed;
+}
+
+.bloco-index{
+    color: #282828;
+    margin-top: 5%;
+    background-color: wheat;
+}
+
+
+.darkgrey{
+    background-color: gainsboro!important;
+    margin: 0!important;
+    padding: 0!important;
+}
