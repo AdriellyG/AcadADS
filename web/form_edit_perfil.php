@@ -22,7 +22,7 @@ $rs = $objConn->Execute($sql);
     <?php include 'menu.html';?>
 
     <div class="container">
-        <h3>Cadastro perfil</h3>
+        <h3>Edita perfil</h3>
         <form action="edit_perfil.php" method="post">
             <div class="row">
             <input name="id" id="id" type="text" value="<?php echo $rs->fields[0];?>" hidden="true">

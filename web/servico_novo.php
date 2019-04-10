@@ -18,6 +18,8 @@
                 </div>
             </div>
             <button class="btn waves-effect waves-light" type="submit" name="action">Novo</button>
+            <a class="btn waves-effect waves-light" href="servico.php">Cancelar</a>
+            <br><br>
         </form>
     </div>
 </body>
