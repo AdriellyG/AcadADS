@@ -1,44 +1,64 @@
+<?php
+require_once("../funcoes_db/connBD.php");
+
+function listaServicos(){
+    $objConn = retornaConexao();
+
+    $sql = "select ser_codigo, ser_descricaoservico from public.servico order by ser_descricaoservico asc";
+
+    $rs = $objConn->Execute($sql);
+
+    $retorno = "";
+    
+    $id = 0;
+    while(!$rs->EOF){
+        $id = $rs->fields[0];
+
+        $retorno .= "<tr>" .
+                        "<td>" . $rs->fields[1] . "</td>" .
+                        "<td><a href='form_edit_servico.php?id=$id'><i class='material-icons'>edit</i></a></td>" .
+                        "<td><a href='delete_servico.php?id=$id'><i class='material-icons'>delete</i></a></td" .
+                    "<tr>";
+
+        $rs->MoveNext();
+    }
+    return $retorno;
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Cadastro serviço</title>
+    <title>Cadastrar serviço</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
 </head>
 <body>
-    <?php include 'menu.html';?>
+    <?php include "menu.html"; ?>
+
     <div class="container">
-        <h3>Cadastro serviço</h3>
-        <form action="servico.php" method="post">
-            <div class="row">
-                <div class="input-field col s6">
-                    <input name="descricao" id="descricao" type="text" class="validate" required="true">
-                    <label class="active" for="descricao">Descrição:</label>
-                </div>
-            </div>
-            <button class="btn waves-effect waves-light" type="submit" name="action">Novo</button>
-        </form>
+    <h2>Serviço</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Editar</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                    <?php echo listaServicos(); ?>
+                
+            </tbody>
+        </table>
+        <br>
+        <a href="servico_novo.php" class="btn waves-effect waves-light">Novo</a>
+        <br><br>
     </div>
 </body>
 </html>
-<?php
-    require_once "funcoes/funcoes_db.php";
-    $descricao = $_POST['descricao'];
-
-    $objConn = retornaConexao();
-
-    $sql_insert = "insert into servico(ser_descricaoservico)
-                    values($descricao)";
-
-    if($rs = $objConn->Execute($sql_insert))
-    {
-        die('<div class="row">' .
-                '<div class="col s12 m5">' .
-                    '<div class="card-panel teal">' .
-                        '<span class="white-text">Inserido com sucesso!</span>' .
-                    '</div>' .
-                '</div>' .
-            '</div>');
-    }
-?>
