@@ -4,7 +4,8 @@ require_once("../funcoes_db/connBD.php");
 function listaServicos(){
     $objConn = retornaConexao();
 
-    $sql = "select ser_codigo, ser_descricaoservico from public.servico order by ser_descricaoservico asc";
+    $sql = "select ser_codigo, ser_descricaoservico " .
+            "from public.servico order by ser_descricaoservico asc";
 
     $rs = $objConn->Execute($sql);
 
