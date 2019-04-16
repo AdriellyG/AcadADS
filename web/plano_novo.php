@@ -20,7 +20,29 @@
             $cont = $rs->fields[0];
             $retorno .= "<option value='$cont'>$valor</option>";
     
-#            $cont = $cont + 1;
+            $rs->MoveNext();
+        }
+        $retorno .= "</select>";
+        
+        return $retorno;
+    }
+
+    function clienteSelect(){
+        
+        $objConn = retornaConexao();
+
+        $sql = "select b.cli_codigo, a.pes_nome from pessoa a, cliente b where a.pes_codigo = b.pes_codigo";
+
+        $rs = $objConn->Execute($sql);
+        
+        $retorno = "<select name='cliente'>";
+        $retorno .= "<option value='' disabled selected>Selecione ...</option>";
+        $cont = 1;
+        while(!$rs->EOF){
+            $valor = $rs->fields[1];
+            $cont = $rs->fields[0];
+            $retorno .= "<option value='$cont'>$valor</option>";
+    
             $rs->MoveNext();
         }
         $retorno .= "</select>";
@@ -41,20 +63,21 @@
     <?php include 'menu.html';?>
     <div class="container">
         <h3>Cadastro</h3>
-        <form action="plano.php" method="post">
+        <form action="cad_plano.php" method="post">
             <div class="row">
                 <div class="input-field col s6">
                     <input name="dt_venc" id="dt_venc" type="date" class="validate" required="true">
                     <label class="active" for="dt_venc">Data vencimento:</label>
                 </div>
                 <div class="input-field col s6">
-                    <input name="cliente" id="cliente" type="text" class="validate" required="true">
-                    <label class="active" for="cliente">Cliente:</label>
-                </div>
-                <div class="input-field col s6">
                     <?php echo servicoSelect(); ?>
                     <label>Serviço</label>
                 </div>
+                <div class="input-field col s6">
+                    <?php echo clienteSelect(); ?>
+                    <label>Cliente</label>
+                </div>
+                
             </div>
             <button class="btn waves-effect waves-light" type="submit" name="action">Novo</button>
         </form>
@@ -66,26 +89,3 @@
     </script>
 </body>
 </html>
-
-<?php
-$dt_venc = $_POST['dt_venc'];
-$cliente = $_POST['cliente'];
-$servico = $_POST['servico'];
-
-die("$servico");
-$objConn = retornaConexao();
-
-$sql_insert = "insert into plano(pla_datavencimento, cli_codigo, ser_codigo)
-                values($dt_venc, $cliente, $servico)";
-
-if($rs = $objConn->Execute($sql_insert))
-{
-    die('<div class="row">' .
-            '<div class="col s12 m5">' .
-                '<div class="card-panel teal">' .
-                    '<span class="white-text">Inserido com sucesso!</span>' .
-                '</div>' .
-            '</div>' .
-        '</div>');
-}
-?>
