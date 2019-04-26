@@ -8,7 +8,7 @@
     function cliAtivos(){
         $objConn = retornaConexao();
 
-        $rs = $objConn->Execute('select count(1) from public.pessoa');
+        $rs = $objConn->Execute('select count(1) from public.pessoa where pes_ativo = true');
 
         $retorno = $rs->fields[0];
 
@@ -71,7 +71,7 @@
             <div class="col s12 m4">
                 <div class="card blue-grey darken-1">
                     <div class="card-content white-text">
-                        <span class="card-title">Nº de clientes:</span>
+                        <span class="card-title">Nº de pessoas ativas:</span>
                         <p>
                         <?php echo cliAtivos();?>
                         </p>

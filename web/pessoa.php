@@ -45,6 +45,7 @@
 
         $rsPes = $objConn->Execute("select pes_codigo, pes_nome, pes_cpf," .
                                     "pes_rg from public.pessoa " .
+                                    "where pes_ativo = true " .
                                     "order by pes_nome");
 
         $retorno = "";

@@ -4,26 +4,42 @@
     ini_set('display_errors', true);
     ini_set('error_reporting', E_ALL);
 
-    function servicoSelect(){
+    function listaPlano(){
         
         $objConn = retornaConexao();
 
-        $sql = "select ser_codigo, ser_descricaoservico from public.servico";
+        $sql = "select pla_codigo, pla_datavencimento, cli_codigo, ser_codigo from public.plano";
 
         $rs = $objConn->Execute($sql);
         
-        $retorno = "<select name='servico'>";
-        $retorno .= "<option value='' disabled selected>Selecione ...</option>";
-        $cont = 1;
+        $id = 0;
+
+        $retorno = "";
+
         while(!$rs->EOF){
-            $valor = $rs->fields[1];
-            $cont = $rs->fields[0];
-            $retorno .= "<option value='$cont'>$valor</option>";
-    
-#            $cont = $cont + 1;
+            $ser_id = $rs->fields[3];
+            $sql_servico = "select ser_descricaoservico from public.servico where ser_codigo = $ser_id";
+
+            $cli_id = $rs->fields[2];
+            $sql_cliente = "select pes_nome from public.pessoa p " .
+                           "inner join public.cliente c on c.cli_ativo = true and c.pes_codigo = p.pes_codigo " .
+                           "and cli_codigo = $cli_id";
+
+            $rs_ser = $objConn->Execute($sql_servico);
+            $rs_cli = $objConn->Execute($sql_cliente);
+
+            $id = $rs->fields[0];
+
+            $retorno .= "<tr>" .
+                            "<td>" . date("d/m/Y", strtotime($rs->fields[1])) . "</td>" .
+                            "<td>" . $rs_cli->fields[0] . "</td>" .
+                            "<td>" . $rs_ser->fields[0] . "</td>" .
+                            "<td><a href='form_edit_plano.php?id=$id'><i class='material-icons'>edit</i></a></td>" .
+                            "<td><a href='delete_plano.php?id=$id'><i class='material-icons'>delete</i></a></td" .
+                        "<tr>";
+
             $rs->MoveNext();
         }
-        $retorno .= "</select>";
         
         return $retorno;
     }
@@ -38,26 +54,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <?php include 'menu.html';?>
+    <?php include "menu.html"; ?>
+
     <div class="container">
-        <h3>Cadastro</h3>
-        <form action="plano.php" method="post">
-            <div class="row">
-                <div class="input-field col s6">
-                    <input name="dt_venc" id="dt_venc" type="date" class="validate" required="true">
-                    <label class="active" for="dt_venc">Data vencimento:</label>
-                </div>
-                <div class="input-field col s6">
-                    <input name="cliente" id="cliente" type="text" class="validate" required="true">
-                    <label class="active" for="cliente">Cliente:</label>
-                </div>
-                <div class="input-field col s6">
-                    <?php echo servicoSelect(); ?>
-                    <label>Serviço</label>
-                </div>
-            </div>
-            <button class="btn waves-effect waves-light" type="submit" name="action">Novo</button>
-        </form>
+    <h2>Planos</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data vencimento</th>
+                    <th>Cliente</th>
+                    <th>Serviço</th>
+                    <th>Editar</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                    <?php echo listaPlano(); ?>
+                
+            </tbody>
+        </table>
+        <br>
+        <a href="plano_novo.php" class="btn waves-effect waves-light">Novo</a>
+        <br><br>
     </div>
     <script>
         $(document).ready(function(){
@@ -66,26 +85,3 @@
     </script>
 </body>
 </html>
-
-<?php
-$dt_venc = $_POST['dt_venc'];
-$cliente = $_POST['cliente'];
-$servico = $_POST['servico'];
-
-die("$servico");
-$objConn = retornaConexao();
-
-$sql_insert = "insert into plano(pla_datavencimento, cli_codigo, ser_codigo)
-                values($dt_venc, $cliente, $servico)";
-
-if($rs = $objConn->Execute($sql_insert))
-{
-    die('<div class="row">' .
-            '<div class="col s12 m5">' .
-                '<div class="card-panel teal">' .
-                    '<span class="white-text">Inserido com sucesso!</span>' .
-                '</div>' .
-            '</div>' .
-        '</div>');
-}
-?>
