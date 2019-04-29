@@ -22,7 +22,7 @@
 
         $rs = $objConn->Execute($sql);
 
-        $retorno = "<select name='servico'>";
+        $retorno = "<select id='servico' name='servico'>";
         $retorno .= "<option value='' disabled selected>Selecione ...</option>";
         $cont = 1;
         while(!$rs->EOF){
@@ -52,7 +52,7 @@
 
         $rs = $objConn->Execute($sql);
         
-        $retorno = "<select name='cliente'>";
+        $retorno = "<select id='cliente' name='cliente'>";
         $retorno .= "<option value='' disabled selected>Selecione ...</option>";
         $cont = 1;
         while(!$rs->EOF){
@@ -85,8 +85,9 @@
     <?php include 'menu.html';?>
     <div class="container">
         <h3>Cadastro</h3>
-        <form action="cad_plano.php" method="post">
+        <form action="edit_plano.php" method="post">
             <div class="row">
+            <input name="id" id="id" type="text" hidden="true" value="<?php echo $rsPlano->fields[0] ?>">
                 <div class="input-field col s6">
                     <input name="dt_venc" id="dt_venc" type="date" class="datepicker" required="true" value="<?php echo $data; ?>">
                     <label class="active" for="dt_venc">Data vencimento:</label>
@@ -101,7 +102,7 @@
                 </div>
                 
             </div>
-            <button class="btn waves-effect waves-light" type="submit" name="action">Novo</button>
+            <button class="btn waves-effect waves-light" type="submit" name="action">Editar</button>
             <a class="btn waves-effect waves-light" href="plano.php">Voltar<i class="mdi-content-reply left"></i></a>
         </form>
     </div>
